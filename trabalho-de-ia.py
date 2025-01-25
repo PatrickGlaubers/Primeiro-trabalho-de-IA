@@ -36,7 +36,7 @@ def sucessores(estado, n):
         if 0 <= nova_posicao < len(estado) and nova_posicao != posicao_vazia and abs(deslocamento) <= n:
             novo_estado = estado[:]
             novo_estado[posicao_vazia], novo_estado[nova_posicao] = novo_estado[nova_posicao], novo_estado[posicao_vazia]
-            movimentos.append((novo_estado, abs(deslocamento)))
+            movimentos.append((novo_estado, 1))
     return movimentos
 
 def busca_largura(estado_inicial, n, exibir_movimentos=False):
@@ -55,7 +55,6 @@ def busca_largura(estado_inicial, n, exibir_movimentos=False):
         total_sucessores += len(filhos)
         if eh_estado_meta(estado_atual, n):
             if exibir_movimentos:
-                print("Movimentos realizados:")
                 for movimento in path:
                     print(movimento)
             fator_ramificacao = total_sucessores / nos_expandidos if nos_expandidos > 1 else 0
@@ -95,7 +94,6 @@ def busca_profundidade_iterativa(estado_inicial, n, exibir_movimentos=False):
 
             if eh_estado_meta(estado_atual, n):
                 if exibir_movimentos:
-                    print("Movimentos realizados:")
                     for movimento in path:
                         print(movimento)
                 fator_ramificacao = total_sucessores / nos_expandidos if nos_expandidos > 1 else 0
@@ -126,6 +124,7 @@ def heuristica_inversoes(estado):
                 inversoes += 1
     return inversoes
 
+
 def busca_a_estrela(estado_inicial, n, heuristica, exibir_movimentos=False):
     inicio = time.time()
     fronteira = []
@@ -148,7 +147,6 @@ def busca_a_estrela(estado_inicial, n, heuristica, exibir_movimentos=False):
 
         if eh_estado_meta(estado_atual, n):
             if exibir_movimentos:
-                print("Movimentos realizados:")
                 for movimento in path:
                     print(movimento)
             fator_ramificacao = total_sucessores / nos_expandidos if nos_expandidos > 1 else 0
@@ -163,16 +161,20 @@ def busca_a_estrela(estado_inicial, n, heuristica, exibir_movimentos=False):
 
 # Exemplo de execução
 N = 2
-estado_inicial = ['A', 'B', '-', 'A', 'A', 'B', 'B', 'B']
+estado_inicial = ['A', 'B', 'B', '-', 'B']
 
-# Executando as buscas com as novas heurísticas
-resultado_largura = busca_largura(estado_inicial, N, exibir_movimentos=False)
+print("Busca em largura - Passos:\n")
+resultado_largura = busca_largura(estado_inicial, N, exibir_movimentos=True)
+print("\nBusca em profundidade - Passos:\n")
 resultado_profundidade = busca_profundidade_iterativa(estado_inicial, N, exibir_movimentos=True)
-resultado_a_estrela_inversoes = busca_a_estrela(estado_inicial, N, heuristica_inversoes, exibir_movimentos=False)
-resultado_a_estrela_melhor_localizacao = busca_a_estrela(estado_inicial, N, heuristica_melhor_localizacao, exibir_movimentos=False)
+print("\nBusca a*(Inversões) - Passos:\n")
+resultado_a_estrela_inversoes = busca_a_estrela(estado_inicial, N, heuristica_inversoes, exibir_movimentos=True)
+print("\nBusca a*(Melhor Localização) - Passos:\n")
+resultado_a_estrela_melhor_localizacao = busca_a_estrela(estado_inicial, N, heuristica_melhor_localizacao, exibir_movimentos=True)
 
 # Imprimindo o relatório de resultados
-print("Relatório de Resultados:\n")
+
+print("\nRelatório de Resultados:\n")
 print("Busca em Largura:")
 print(f"  Custo: {resultado_largura[0]}")
 print(f"  Nós Expandidos: {resultado_largura[1]}")
@@ -193,6 +195,7 @@ print(f"  Nós Expandidos: {resultado_a_estrela_inversoes[1]}")
 print(f"  Tempo Gasto: {resultado_a_estrela_inversoes[2]:.6f} segundos")
 print(f"  Memória Utilizada: {resultado_a_estrela_inversoes[3] / 1024:.2f} KB")
 print(f"  Fator de Ramificação: {resultado_a_estrela_inversoes[4]:.2f}")
+
 
 print("\nBusca A* (Heurística de Melhor Localização):")
 print(f"  Custo: {resultado_a_estrela_melhor_localizacao[0]}")
